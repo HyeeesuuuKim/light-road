@@ -1,0 +1,459 @@
+/* ═══════════════════════════════════════════════
+   Light-Road — Global Styles
+   ═══════════════════════════════════════════════ */
+
+/* ── 전역 리셋 (모바일 UI 깨짐 방지) ───────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ── 앱 레이아웃 ──────────────────────────────── */
+.app-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 하단: FAB(우하단 고정)와 겹치지 않도록 여백 + iPhone 홈바 안전영역 */
+  padding: 24px 16px calc(100px + env(safe-area-inset-bottom));
+  gap: 16px;
+}
+
+/* 결과 영역 등장 애니메이션 */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.app-container > .loading-bar,
+.app-container > .results-panel {
+  animation: fadeInUp 0.4s ease both;
+}
+
+.results-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ── 로딩 바 ──────────────────────────────────── */
+.loading-bar {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 0;
+}
+.loading-bar-inner {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #56CCF2, #2F80ED, #56CCF2, transparent);
+  background-size: 200% 100%;
+  border-radius: 2px;
+  animation: shimmer 1.3s infinite linear;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.loading-text {
+  font-size: 13px;
+  color: #56CCF2;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ── AI 안심 가이드 ───────────────────────────── */
+.ai-guide {
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(29, 158, 117, 0.10), rgba(21, 32, 48, 0.4)),
+    #152030;
+  border: 1px solid rgba(29, 158, 117, 0.4);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+.ai-guide-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+.ai-guide-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #2fd39a;
+  font-weight: bold;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+.ai-guide-text {
+  color: #dfeef0;
+  font-size: 0.92rem;
+  margin: 0;
+  line-height: 1.65;
+}
+/* 로딩 중 점 애니메이션 */
+.ai-guide-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #7ea8ba;
+  font-size: 0.9rem;
+}
+.ai-dots { display: inline-flex; gap: 4px; }
+.ai-dots span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #2fd39a;
+  animation: aiDot 1.2s infinite ease-in-out both;
+}
+.ai-dots span:nth-child(2) { animation-delay: 0.2s; }
+.ai-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes aiDot {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.8); }
+  40%           { opacity: 1;    transform: scale(1); }
+}
+
+/* ── 경로 비교 카드 행 ───────────────────────── */
+.route-card-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── 개별 경로 카드 ──────────────────────────── */
+.route-card {
+  flex: 1;
+  min-width: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent), #152030;
+  border: 1.5px solid #223247;
+  border-radius: 16px;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.12s, background 0.2s;
+  user-select: none;
+  box-sizing: border-box;
+}
+.route-card:hover {
+  border-color: color-mix(in srgb, var(--card-color) 55%, transparent);
+  transform: translateY(-2px);
+}
+.route-card:active { transform: scale(0.98); }
+.route-card--active {
+  border-color: var(--card-color);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--card-color) 12%, transparent), transparent),
+    #152030;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--card-color) 40%, transparent),
+    0 6px 24px color-mix(in srgb, var(--card-color) 22%, transparent);
+}
+
+.route-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 13px;
+}
+.route-card-title {
+  color: #e8f1fa;
+  font-weight: 700;
+  font-size: 14px;
+}
+.route-card-badge {
+  font-size: 10.5px;
+  font-weight: bold;
+  padding: 2px 9px;
+  border-radius: 20px;
+  border: 1px solid;
+  background: transparent;
+}
+
+.route-card-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;   
+  margin-bottom: 10px;
+}
+.stat { 
+  flex: 1 1 0; 
+  min-width: 0;
+  text-align: center; 
+}
+.stat-label {
+  display: block;
+  font-size: 10px;
+  color: #5a7a9a;
+  margin-bottom: 4px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.stat-value {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #eef4fa;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.stat-divider { 
+  width: 1px; 
+  height: 24px; 
+  background: #223247;
+  margin: 0 2px;
+}
+
+.route-card-footer {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  border-top: 1px solid #223247;
+  padding-top: 8px;
+  font-size: 10.5px;
+  color: #7a9ab8;
+}
+
+/* ── 지도 카드 ───────────────────────────────── */
+.map-card {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #223247;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+.map-legend {
+  background: #152030;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-routes { display: flex; gap: 8px; }
+.legend-route-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0;
+  background: transparent;
+  border: 1px solid #223247;
+  border-radius: 9px;
+  color: #5a7a9a;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.legend-route-btn:hover { border-color: var(--route-color); }
+.legend-route-btn.active {
+  border-color: var(--route-color);
+  color: var(--route-color);
+  background: color-mix(in srgb, var(--route-color) 12%, transparent);
+}
+.legend-line { display: inline-block; width: 18px; height: 3px; border-radius: 2px; }
+.safe-line  { background: #56CCF2; }
+.short-line { background: #FAC775; }
+
+.legend-facilities {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+/* ── 경로 안내 / 시뮬레이션 버튼 행 ─────────── */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  padding-bottom: 8px;
+}
+
+.btn-nav, .btn-sim {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: transform 0.1s, box-shadow 0.2s, filter 0.15s;
+}
+.btn-nav {
+  background: linear-gradient(135deg, #56CCF2, #2F80ED);
+  color: #06121e;
+  box-shadow: 0 4px 16px rgba(86, 204, 242, 0.28);
+}
+.btn-nav:hover  { filter: brightness(1.08); box-shadow: 0 6px 20px rgba(86, 204, 242, 0.4); }
+.btn-nav:active { transform: scale(0.96); }
+
+.btn-sim {
+  background: linear-gradient(135deg, #22b083, #158a63);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(29, 158, 117, 0.25);
+}
+.btn-sim:hover  { filter: brightness(1.08); box-shadow: 0 6px 20px rgba(29, 158, 117, 0.38); }
+.btn-sim:active { transform: scale(0.96); }
+
+/* ═══════════════════════════════════════════════
+   긴급 대피 FAB + 팝업
+   ═══════════════════════════════════════════════ */
+
+/* 우하단 고정 플로팅 버튼 — 엄지 영역, 항상 접근 가능 */
+.emergency-fab {
+  position: fixed;
+  right: calc(16px + env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 1200;
+  min-width: 60px;
+  height: 60px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #ff5252, #d32f2f);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  box-shadow: 0 6px 20px rgba(211, 47, 47, 0.5);
+  transition: transform 0.12s, box-shadow 0.2s, filter 0.15s;
+  animation: fabPulse 2.4s ease-in-out infinite;
+}
+.emergency-fab:hover  { filter: brightness(1.08); box-shadow: 0 8px 26px rgba(211, 47, 47, 0.6); }
+.emergency-fab:active { transform: scale(0.93); }
+.emergency-fab:disabled { opacity: 0.7; cursor: wait; animation: none; }
+.fab-label { font-size: 11px; letter-spacing: 0.02em; }
+
+/* 은은한 맥박 효과로 주목도 확보 */
+@keyframes fabPulse {
+  0%, 100% { box-shadow: 0 6px 20px rgba(211, 47, 47, 0.5); }
+  50%      { box-shadow: 0 6px 28px rgba(211, 47, 47, 0.85); }
+}
+
+/* 로딩 스피너 */
+.fab-spinner {
+  width: 22px; height: 22px;
+  border: 3px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: fabSpin 0.8s linear infinite;
+}
+@keyframes fabSpin { to { transform: rotate(360deg); } }
+
+/* 팝업 오버레이 */
+.emergency-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* 하단 시트 형태 (모바일 표준 패턴) */
+.emergency-sheet {
+  width: 100%;
+  max-width: 460px;
+  background: #152030;
+  border: 1px solid #2a3f55;
+  border-radius: 18px;
+  padding: 20px 16px 16px;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.5);
+  animation: sheetUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes sheetUp { from { transform: translateY(40px); opacity: 0.6; } to { transform: translateY(0); opacity: 1; } }
+
+.emergency-title {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-align: center;
+}
+.emergency-sub {
+  color: #8aabb8;
+  font-size: 0.82rem;
+  text-align: center;
+  margin: 4px 0 16px;
+}
+
+/* 시설 선택 옵션 */
+.emergency-opt {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  background: #1a2e42;
+  border: 1px solid #2a3f55;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.emergency-opt:hover  { border-color: #56CCF2; background: #1e3550; }
+.emergency-opt:active { transform: scale(0.98); }
+.emergency-opt-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.emergency-opt-label { color: #e8f1fa; font-size: 0.98rem; font-weight: 700; }
+.emergency-opt-addr {
+  color: #7a9ab8; font-size: 0.78rem; margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.emergency-opt-dist { color: #56CCF2; font-size: 0.95rem; font-weight: 800; flex-shrink: 0; }
+
+.emergency-cancel {
+  width: 100%;
+  padding: 13px;
+  margin-top: 4px;
+  background: transparent;
+  border: 1px solid #2a3f55;
+  border-radius: 12px;
+  color: #8aabb8;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.emergency-cancel:hover { background: #1a2e42; }
+
+
+/* ── 좁은 모바일 화면(≤400px) 대응 ── */
+@media (max-width: 400px) {
+  .app-container { padding-left: 12px; padding-right: 12px; }
+  .route-card-row { gap: 6px; }
+  .btn-row { gap: 8px; }
+  .btn-nav, .btn-sim { padding: 13px; font-size: 14px; }
+  .emergency-fab { min-width: 54px; height: 54px; }
+}
