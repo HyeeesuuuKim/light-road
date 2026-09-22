@@ -42,6 +42,7 @@ app.add_middleware(
         "https://127.0.0.1:3000",
         "https://10.70.62.137:3000",
         "http://10.70.62.137:3000",
+        "https://light-road-five.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
