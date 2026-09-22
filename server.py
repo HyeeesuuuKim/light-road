@@ -6,6 +6,7 @@ import asyncio
 import httpx
 import json
 import time
+import os
 
 # ── DB 커넥션 풀 ──────────────────────────────────────────────────────────────
 pool: asyncpg.Pool = None
@@ -13,15 +14,20 @@ pool: asyncpg.Pool = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global pool
-    pool = await asyncpg.create_pool(
-        database="lightroad",
-        user="dongeun",
-        password="qazxcv62",
-        host="localhost",
-        port=5432,
-        min_size=3,
-        max_size=10,
-    )
+    database_url = os.environ.get("DATABASE_URL")
+    if database_url:
+        # Render 등 클라우드 환경 — Internal Database URL 사용
+        pool = await asyncpg.create_pool(database_url, min_size=3, max_size=10)
+    else:
+        pool = await asyncpg.create_pool(
+            database="lightroad",
+            user="dongeun",
+            password="qazxcv62",
+            host="localhost",
+            port=5432,
+            min_size=3,
+            max_size=10,
+        )
     yield
     await pool.close()
 
