@@ -29,3 +29,8 @@ __pycache__/
 db/
 .claude/
 osrm-data/
+.git_old/
+
+.env
+public/api.env
+osrm-deploy/
